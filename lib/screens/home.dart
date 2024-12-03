@@ -7,13 +7,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text(
-          "Recipe Book",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: 125,
@@ -40,7 +33,8 @@ class HomeScreen extends StatelessWidget {
           ]),
         ),
       ),
-    );;
+    );
+    ;
   }
 }
 

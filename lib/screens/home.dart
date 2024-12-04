@@ -24,7 +24,9 @@ class HomeScreen extends StatelessWidget {
             Container(
               height: 125,
               width: 100,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12),color:Colors.orange),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(fit: BoxFit.cover, "images/comida1.jpg")),
             ),
             SizedBox(
               width: 26,

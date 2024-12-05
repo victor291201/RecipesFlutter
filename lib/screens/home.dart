@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
       context: context,
       builder: (context) => Container(
         width: MediaQuery.of(context).size.width,
-        
+        height: 2000,
         color: Colors.white,
         child: RecipeForm(),
       ),

@@ -1,50 +1,32 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:holamundo/providers/recipes.dart';
 import 'package:holamundo/screens/recipe_detail.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<List<dynamic>> FetchRecipes() async {
-    //ANDROID 10.0.2.2
-    //IOS 127.0.0.1
-    //WEB localhost
-    final url = Uri.parse("http://10.0.2.2:12346/recipes");
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return data["recipes"];
-      } else {
-        print('error${response.statusCode}');
-        return [];
-      }
-    } catch (e) {
-      print('Error in request');
-      return [];
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final recipesProvider = Provider.of<RecipesProvider>(context,listen:false);
+    recipesProvider.FetchRecipes();
     return Scaffold(
-      body: FutureBuilder<List<dynamic>>(
-        future: FetchRecipes(),
-        builder: (context, snapShot) {
-          final recipes = snapShot.data ?? [];
-          if (snapShot.connectionState == ConnectionState.waiting) {
+      body: Consumer<RecipesProvider>(
+        builder: (context, provider, child) {
+          if(provider.isLoading){
             return const Center(child: CircularProgressIndicator());
-          } else if (!snapShot.hasData || snapShot.data!.isEmpty) {
+          }else if (provider.recipes.isEmpty) {
             return const Center(
               child: Text("No recipes found"),
             );
           } else {
             return ListView.builder(
-              itemCount: recipes!.length,
+              itemCount: provider.recipes!.length,
               itemBuilder: (context, index) {
-                return _RecipesCard(context, recipes[index]);
+                return _RecipesCard(context, provider.recipes[index]);
               },
             );
           }
@@ -77,7 +59,7 @@ class HomeScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RecipeDetail(recipeName: recipe["name"]),
+            builder: (context) => RecipeDetail(recipeData: recipe),
           ),
         );
       },
@@ -94,7 +76,7 @@ class HomeScreen extends StatelessWidget {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child:
-                        Image.network(fit: BoxFit.cover, recipe["image_link"])),
+                        Image.network(fit: BoxFit.cover, recipe.image_link)),
               ),
               SizedBox(
                 width: 26,
@@ -103,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(recipe["name"],
+                  Text(recipe.name,
                       style: TextStyle(fontSize: 16, fontFamily: "Quicksand")),
                   SizedBox(
                     height: 4,
@@ -112,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 4,
                   ),
-                  Text(recipe["author"],
+                  Text('By ${recipe.author}',
                       style: TextStyle(fontSize: 16, fontFamily: "Quicksand")),
                 ],
               ),

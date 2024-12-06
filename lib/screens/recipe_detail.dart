@@ -11,8 +11,26 @@ class RecipeDetail extends StatefulWidget {
   _RecipeDetailState createState() => _RecipeDetailState();
 }
 
-class _RecipeDetailState extends State<RecipeDetail> {
+class _RecipeDetailState extends State<RecipeDetail>
+    with SingleTickerProviderStateMixin {
   bool isFavorite = false;
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller =
+        AnimationController(vsync: this, duration: Duration(microseconds: 300));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.5)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut))
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _controller.reverse();
+        }
+      });
+  }
 
   @override
   void didChangeDependencies() {
@@ -21,6 +39,12 @@ class _RecipeDetailState extends State<RecipeDetail> {
         .favoriteRecipe
         .contains(widget.recipeData);
     ;
+  }
+
+  @override
+  void dispose(){
+    _controller.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -47,8 +71,11 @@ class _RecipeDetailState extends State<RecipeDetail> {
                   isFavorite = !isFavorite;
                 });
               },
-              icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.white),
+              icon: ScaleTransition(
+                scale:_scaleAnimation,
+                child: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -73,13 +100,15 @@ class _RecipeDetailState extends State<RecipeDetail> {
                 height: 8,
               ),
               Container(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                  for (var step in widget.recipeData.recipeSteps)
-                    Text(
-                      '- $step',
-                      textAlign: TextAlign.start,
-                    )
-                ]),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var step in widget.recipeData.recipeSteps)
+                        Text(
+                          '- $step',
+                          textAlign: TextAlign.start,
+                        )
+                    ]),
               ),
             ],
           ),

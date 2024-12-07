@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:holamundo/providers/recipes.dart';
 import 'package:holamundo/screens/favorites.dart';
 import 'package:holamundo/screens/home.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,11 +16,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider(
-        create: (_) => RecipesProvider(),
-      )
-    ], child: MaterialApp(title: 'Hola mundo', home: RecipeBook()));
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => RecipesProvider(),
+          )
+        ],
+        child: MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate
+            ],
+            debugShowCheckedModeBanner: false,
+            title: 'Hola mundo',
+            home: RecipeBook()));
   }
 }
 

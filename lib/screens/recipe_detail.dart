@@ -42,7 +42,7 @@ class _RecipeDetailState extends State<RecipeDetail>
   }
 
   @override
-  void dispose(){
+  void dispose() {
     _controller.dispose();
     super.dispose();
   }
@@ -67,13 +67,14 @@ class _RecipeDetailState extends State<RecipeDetail>
               onPressed: () async {
                 await Provider.of<RecipesProvider>(context, listen: false)
                     .toggleFavoriteStatus(widget.recipeData);
+                
                 setState(() {
                   isFavorite = !isFavorite;
                 });
               },
               icon: ScaleTransition(
-                scale:_scaleAnimation,
-                child: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
+                scale: _scaleAnimation,
+                child: Icon(this.isFavorite ? Icons.favorite : Icons.favorite_border,
                     color: Colors.white),
               ),
             ),

@@ -6,6 +6,7 @@ import 'package:holamundo/providers/recipes.dart';
 import 'package:holamundo/screens/recipe_detail.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
@@ -20,7 +21,7 @@ class FavoritesScreen extends StatelessWidget {
 
             return favoritesRecipes.isEmpty
                 ? Center(
-                    child: Text("No favorites recipes"),
+                    child: Text(AppLocalizations.of(context)!.noRecipes),
                   )
                 : ListView.builder(
                     itemCount: favoritesRecipes.length,

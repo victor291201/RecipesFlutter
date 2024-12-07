@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:holamundo/models/recipe.dart';
 import 'package:holamundo/providers/recipes.dart';
 import 'package:holamundo/screens/recipe_detail.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -16,19 +18,21 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Consumer<RecipesProvider>(
         builder: (context, provider, child) {
+            final favoritesRecipes = recipesProvider.recipes;
           if(provider.isLoading){
             return const Center(child: CircularProgressIndicator());
           }else if (provider.recipes.isEmpty) {
-            return const Center(
-              child: Text("No recipes found"),
+            return  Center(
+              child: Text(AppLocalizations.of(context)!.noRecipes),
             );
           } else {
             return ListView.builder(
-              itemCount: provider.recipes!.length,
-              itemBuilder: (context, index) {
-                return _RecipesCard(context, provider.recipes[index]);
-              },
-            );
+                    itemCount: favoritesRecipes.length,
+                    itemBuilder: (context, index) {
+                      final recipe = favoritesRecipes[index];
+                      return RecipesCard(recipe: recipe);
+                    },
+                  );
           }
         },
       ),
@@ -51,58 +55,6 @@ class HomeScreen extends StatelessWidget {
               color: Colors.white,
               child: RecipeForm(),
             ));
-  }
-
-  Widget _RecipesCard(BuildContext context, dynamic recipe) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RecipeDetail(recipeData: recipe),
-          ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 125,
-          child: Card(
-            child: Row(children: <Widget>[
-              Container(
-                height: 125,
-                width: 100,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child:
-                        Image.network(fit: BoxFit.cover, recipe.image_link)),
-              ),
-              SizedBox(
-                width: 26,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(recipe.name,
-                      style: TextStyle(fontSize: 16, fontFamily: "Quicksand")),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Container(height: 2, width: 75, color: Colors.orange),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text('By ${recipe.author}',
-                      style: TextStyle(fontSize: 16, fontFamily: "Quicksand")),
-                ],
-              ),
-            ]),
-          ),
-        ),
-      ),
-    );
   }
 }
 
@@ -238,4 +190,61 @@ class RecipeForm extends StatelessWidget {
       maxLines: maxLines,
     );
   }
+}
+
+class RecipesCard extends StatelessWidget {
+  final Recipe recipe;
+  const RecipesCard({super.key, required this.recipe});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeDetail(recipeData: recipe),
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 125,
+          child: Card(
+            child: Row(children: <Widget>[
+              Container(
+                height: 125,
+                width: 100,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child:
+                        Image.network(fit: BoxFit.cover, recipe.image_link)),
+              ),
+              SizedBox(
+                width: 26,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(recipe.name,
+                      style: TextStyle(fontSize: 16, fontFamily: "Quicksand")),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Container(height: 2, width: 75, color: Colors.orange),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Text('By ${recipe.author}',
+                      style: TextStyle(fontSize: 16, fontFamily: "Quicksand")),
+                ],
+              ),
+            ]),
+          ),
+        ),
+      ),
+    );}
 }

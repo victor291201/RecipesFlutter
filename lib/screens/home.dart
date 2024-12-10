@@ -13,12 +13,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final recipesProvider = Provider.of<RecipesProvider>(context,listen:false);
+    var recipesProvider = Provider.of<RecipesProvider>(context,listen:false);
     recipesProvider.FetchRecipes();
     return Scaffold(
       body: Consumer<RecipesProvider>(
         builder: (context, provider, child) {
-            final favoritesRecipes = recipesProvider.recipes;
+            var favoritesRecipes = recipesProvider.recipes;
           if(provider.isLoading){
             return const Center(child: CircularProgressIndicator());
           }else if (provider.recipes.isEmpty) {
@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
             return ListView.builder(
                     itemCount: favoritesRecipes.length,
                     itemBuilder: (context, index) {
-                      final recipe = favoritesRecipes[index];
+                      var recipe = favoritesRecipes[index];
                       return RecipesCard(recipe: recipe);
                     },
                   );
@@ -193,8 +193,8 @@ class RecipeForm extends StatelessWidget {
 }
 
 class RecipesCard extends StatelessWidget {
-  final Recipe recipe;
-  const RecipesCard({super.key, required this.recipe});
+   Recipe recipe;
+   RecipesCard({super.key, required this.recipe});
 
   @override
   Widget build(BuildContext context) {

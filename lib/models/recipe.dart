@@ -39,4 +39,13 @@ class Recipe{
   String toString() {
     return 'Recipe{id: $id,name: $name, author: $author, image_link: $image_link, recipe: $recipeSteps}';
   }
+   @override
+  bool operator ==(other) {
+    return (other is Recipe)
+        && other.id == id
+        && other.name == name
+        && other.author == author
+        && other.image_link == image_link
+        && other.recipeSteps == recipeSteps;
+  }
 }

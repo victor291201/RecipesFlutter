@@ -15,11 +15,11 @@ class RecipesProvider extends ChangeNotifier {
     //ANDROID 10.0.2.2
     //IOS 127.0.0.1
     //WEB localhost
-    final url = Uri.parse("http://127.0.0.1:12346/recipes");
+    var url = Uri.parse("http://127.0.0.1:12346/recipes");
     try {
-      final response = await http.get(url);
+      var  response = await http.get(url);
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+         var data = jsonDecode(response.body);
         recipes = List<Recipe>.from(
             data['recipes'].map((recipe) => Recipe.fromJSON(recipe)));
       } else {
@@ -37,16 +37,19 @@ class RecipesProvider extends ChangeNotifier {
   }
 
   Future<void> toggleFavoriteStatus(Recipe recipe) async {
-    final isFavorito = favoriteRecipe.contains(recipe);
+
+    var RecipeVarFavorite = favoriteRecipe.where((i) => i.id == recipe.id).toList();
+    var isFavorito = (RecipeVarFavorite.length != 0);
+    print(isFavorito);
 
     try {
-      final url = Uri.parse("http://127.0.0.1:12346/favorites");
-      final response = isFavorito
+      var url = Uri.parse("http://127.0.0.1:12346/favorites");
+      var response = isFavorito
           ? await http.delete(url, body: json.encode({'id': recipe.id}))
           : await http.post(url, body: json.encode(recipe.toJson()));
       if (response.statusCode == 200) {
         if (isFavorito) {
-          favoriteRecipe.remove(recipe);
+          favoriteRecipe = favoriteRecipe.where((i) => i.id != recipe.id).toList();
         } else {
           favoriteRecipe.add(recipe);
         }

@@ -4,8 +4,8 @@ import 'package:holamundo/providers/recipes.dart';
 import 'package:provider/provider.dart';
 
 class RecipeDetail extends StatefulWidget {
-  final Recipe recipeData;
-  const RecipeDetail({super.key, required this.recipeData});
+  Recipe recipeData;
+  RecipeDetail({super.key, required this.recipeData});
 
   @override
   _RecipeDetailState createState() => _RecipeDetailState();
@@ -35,10 +35,10 @@ class _RecipeDetailState extends State<RecipeDetail>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    isFavorite = Provider.of<RecipesProvider>(context, listen: false)
-        .favoriteRecipe
-        .contains(widget.recipeData);
-    ;
+    var listRecipes = Provider.of<RecipesProvider>(context, listen: false)
+        .favoriteRecipe;
+    var RecipeVarFavorite = listRecipes.where((i) => i.id == widget.recipeData.id).toList();
+    isFavorite = (RecipeVarFavorite.length != 0);
   }
 
   @override
@@ -74,7 +74,7 @@ class _RecipeDetailState extends State<RecipeDetail>
               },
               icon: ScaleTransition(
                 scale: _scaleAnimation,
-                child: Icon(this.isFavorite ? Icons.favorite : Icons.favorite_border,
+                child: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
                     color: Colors.white),
               ),
             ),

@@ -17,7 +17,7 @@ class FavoritesScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Consumer<RecipesProvider>(
           builder: (context, recipesProvider, child) {
-            final favoritesRecipes = recipesProvider.favoriteRecipe;
+            var favoritesRecipes = recipesProvider.favoriteRecipe;
 
             return favoritesRecipes.isEmpty
                 ? Center(
@@ -26,7 +26,7 @@ class FavoritesScreen extends StatelessWidget {
                 : ListView.builder(
                     itemCount: favoritesRecipes.length,
                     itemBuilder: (context, index) {
-                      final recipe = favoritesRecipes[index];
+                      var recipe = favoritesRecipes[index];
                       return favoriteRecipesCard(recipe: recipe);
                     },
                   );
@@ -36,8 +36,8 @@ class FavoritesScreen extends StatelessWidget {
 }
 
 class favoriteRecipesCard extends StatelessWidget {
-  final Recipe recipe;
-  const favoriteRecipesCard({super.key, required this.recipe});
+  Recipe recipe;
+ favoriteRecipesCard({super.key, required this.recipe});
 
   @override
   Widget build(BuildContext context) {
